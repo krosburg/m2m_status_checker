@@ -2,7 +2,7 @@
 Checks the science data status of all CE and RSN streamed instruments in the OOI Cabled Observatory.
 
 ## ooicreds
-You will need to create your own ooicreds.py with the following information:
+You will need to create your own ooicreds.py with the following variables:
 
 <code>UKEY</code> Your OOI user login key
 
