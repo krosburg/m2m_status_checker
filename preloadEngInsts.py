@@ -11,7 +11,7 @@ from ooi_globals import U, wanted_nodes
 requests.packages.urllib3.disable_warnings()
 
 # Engineering Only or Science Only? (True=Eng,False=Sci)
-ENG_ONLY = False
+ENG_ONLY = True
 
 # Instantiate a Container
 rsn = ooi.Array()
@@ -88,10 +88,10 @@ for siteID in getSites():
     rsn.addSite(newSite)
 
     printV(' ')
-    time.sleep(5)
+    time.sleep(3)
 
 # Save The Structure
-out_file = './rsn_streams.pkl'
+out_file = './rsn_eng_streams.pkl'
 print('Saving as ' + out_file + '... ', '')
 with open(out_file, 'wb') as output:
     pickle.dump(rsn, output, pickle.HIGHEST_PROTOCOL)

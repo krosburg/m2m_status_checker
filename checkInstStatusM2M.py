@@ -6,6 +6,9 @@ from ooi_func import printV, lastSampleTime
 YEL_CUTOFF = 12
 GRN_CUTOFF = 1
 
+# Engineering Only or Science Only? (True=Eng,False=Sci)
+ENG_ONLY = False
+
 # Define RSN Streams Object File
 in_file = 'rsn_streams.pkl'
 

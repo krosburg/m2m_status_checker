@@ -2,7 +2,7 @@ import requests
 import datetime as dt
 from time import sleep
 from ooicreds import UKEY, TOKE
-from ooi_globals import U, PRELOAD_URL, VERB, ENG_ONLY
+from ooi_globals import U, PRELOAD_URL, VERB
 """Functions for the OOI package, to go with ooi_globals and ooi_classes."""
 
 # == Define Important Variables ===============================================
@@ -67,11 +67,11 @@ def getSites():
 
 
 # == Define getInstruments Helper Function ====================================
-def getInstruments(site, node):
+def getInstruments(site, node, ENG_ONLY):
     """getInstruments(site, node): Returns a list of instruments for a given site-
-    node pair, filtered for either sci or eng instruments based on the global
-    ENG_ONLY flag. Requires global varoab;es U, UKEY, TOKE, TIMEOUT, VERIFY
-    to be set."""
+    node pair, filtered for either sci or eng instruments based on the ENG_ONLY
+    flag. Requires global variables U, UKEY, TOKE, TIMEOUT, VERIFY to be
+    set."""
     # Request Data from M2M
     res = getData(U + site + '/' + node)
 
