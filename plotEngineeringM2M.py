@@ -1,10 +1,7 @@
+
 import cPickle as pickle
 import datetime as dt
 from ooi_func import printV, lastSampleTime
-
-# Color Time Cutoffs (hours)
-YEL_CUTOFF = 12
-GRN_CUTOFF = 1
 
 # Define RSN Streams Object File
 in_file = 'rsn_streams.pkl'
