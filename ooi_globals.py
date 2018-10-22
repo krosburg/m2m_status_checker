@@ -6,9 +6,6 @@ U = BASE_URL + '/12576/sensor/inv/'
 # Verbose? (boolean)
 VERB = True
 
-# Engineering Only or Science Only? (True=Eng,False=Sci)
-ENG_ONLY = False
-
 # Setup Nodes of Interest List
 wanted_nodes = ['LJ01A', 'MJ01A', 'SF01A', 'PC01A', 'LJ01B', 'DP01A',
                 'MJ01B', 'LJ01C', 'SF01B', 'PC01B', 'DP01B', 'MJ01C',

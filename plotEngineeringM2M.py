@@ -1,30 +1,8 @@
-
 import cPickle as pickle
-import datetime as dt
-from ooi_func import printV, lastSampleTime
+from ooi_func import printV
 
 # Define RSN Streams Object File
-in_file = 'rsn_streams.pkl'
-
-
-def checkTimeDiff(t_end):
-    """Given a last samp time, t_end [datetime], calcualtes the time difference
-    [timedelta] between now & the last sample in hours. If the difference is
-    greater than YEL_CUTOFF, returns the time diff & the flag `red`, if less
-    than red cutoff & greater than green cutoff the time diff & `yellow` flag
-    are returned, if below the green cuttoff, `green` is returned with the
-    time_diff. Cuttoffs are global YEL_CUTOFF,GRN_CUTOFF variables."""
-    # Calcualte the time difference
-    time_diff = (dt.datetime.utcnow() - t_end).total_seconds()/3600.0
-
-    if time_diff > YEL_CUTOFF:
-        tcolor = 'red'
-    elif time_diff > GRN_CUTOFF:
-        tcolor = 'yellow'
-    else:
-        tcolor = 'green'
-
-    return time_diff, tcolor
+in_file = 'rsn_eng_streams.pkl'
 
 
 # Load RSN Data Structure
@@ -58,14 +36,5 @@ for site in rsn.sites:
             if not streams:
                 continue
 
-            # Isolate Single Stream
-            streams = streams[0]
-
-            # Request the last sameple time & Check Difference
-            t_end = lastSampleTime(site.id, node.id, inst.id, streams.name)
-            t_diff, tcolor = checkTimeDiff(t_end)
-
             # Print Results
             printV('%s-%s-%s:' % (site.id, node.id, inst.id))
-            printV('  %s - %s' % (streams.name, streams.streamType))
-            printV('    %s\n      %s (%2.1f hr)' % (t_end, tcolor, t_diff))
