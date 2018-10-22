@@ -1,4 +1,5 @@
 import requests
+import datetime as dt
 from time import sleep
 from ooicreds import UKEY, TOKE
 from ooi_globals import U, PRELOAD_URL, VERB, ENG_ONLY
@@ -20,19 +21,19 @@ TIMEOUT = 10
 
 # == Define printV Helper Function ============================================
 def printV(msg):
-    """printV(msg [string]): Prints MSG if the global variable VERB=True."""
+    """Prints MSG if the global variable VERB=True."""
     if VERB:
         print(msg)
 
 
-# == Define isScienceStream Helper Function ===================================
+# == Define getStreamType Helper Function =====================================
 def getStreamType(stream_name):
     """Returns type of stream (science, engineering, etc.)."""
-    return getData(PRELOAD_URL + stream_name)['stream_type']['value']
+    return getData(PRELOAD_URL + stream_name, 2)['stream_type']['value']
 
 
 # == Define getData Helper Function ===========================================
-def getData(url):
+def getData(url, pause=0):
     """getData(url): Given a full URL, contacts the M2M server using Python's
     request.get() routine, supplying credentials using global variables UKEY,
     TOKE & timeout & verification flags using globals TIMEOUT & VERIFY.
@@ -40,7 +41,7 @@ def getData(url):
     unsucessful, returns an empty array; if sucessful, returns the JSONified
     result of the requests.get() query."""
     try:
-        sleep(2.5)
+        sleep(pause)
         raw_data = requests.get(url, auth=(UKEY, TOKE),
                                 timeout=TIMEOUT, verify=VERIFY)
         if not raw_data.status_code == SUCCESS_CODE:
@@ -100,3 +101,18 @@ def getStreams(site, node, inst):
         return []
 
     return res
+
+
+# == Define lastSampleTime() Helper Function ==================================
+def lastSampleTime(site, node, inst, stream):
+    """Returns the UTC data & time of last M2M sample for the given
+    site-node-inst-stream as a datetime element."""
+
+    # Request timem metadata for the instrument
+    res = getData(U + site + '/' + node + '/' + inst + '/metadata/times', 1)
+
+    # Filter return based on the given stream name
+    t_end = [time['endTime'] for time in res if time['stream'] == stream][0]
+
+    # Convert to Datetime
+    return dt.datetime.strptime(t_end, '%Y-%m-%dT%H:%M:%S.%fZ')
