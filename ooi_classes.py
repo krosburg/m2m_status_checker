@@ -36,11 +36,6 @@ class Node:
     def addInst(self, instObj):
         self.instruments.append(instObj)
 
-    '''
-    def addInst(self, name, instID, parSite, parNode):
-        self.instruments.append(Inst(name, instID, parSite, parNode))
-    '''
-
 
 class Site:
     def __init__(self, name, siteID):
@@ -51,11 +46,6 @@ class Site:
     def addNode(self, nodeObj):
         self.nodes.append(nodeObj)
 
-    '''
-    def addNode(self, name, nodeID, parSite):
-        self.nodes.append(Node(name, nodeID, parSite))
-    '''
-
 
 class Array:
     def __init__(self):
@@ -64,7 +54,14 @@ class Array:
     def addSite(self, siteObj):
         self.sites.append(siteObj)
 
-    '''
-    def addSite(self, name, siteID):
-        self.sites.append(Site(name, siteID))
-    '''
+    def traversePrint(self):
+        for site in self.sites:
+            print(site.id)
+            for node in site.nodes:
+                print('  ' + node.id)
+                for inst in node.instruments:
+                    print('    ' + inst.id)
+                    for stream in inst.streams:
+                        print('      %s : %s' % (stream.name,
+                                                 stream.streamType))
+            print('')
