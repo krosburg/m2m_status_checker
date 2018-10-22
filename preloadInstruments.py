@@ -90,6 +90,6 @@ for siteID in getSites():
 # Save The Structure
 out_file = './rsn_streams.pkl'
 print('Saving as ' + out_file + '... ', '')
-# with open(out_file, 'wb') as output:
-    # pickle.dump(rsn, output, pickle.HIGHEST_PROTOCOL)
+with open(out_file, 'wb') as output:
+    pickle.dump(rsn, output, pickle.HIGHEST_PROTOCOL)
 print('Done!')
