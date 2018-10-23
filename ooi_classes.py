@@ -59,6 +59,14 @@ class Node:
     def addInst(self, instObj):
         self.instruments.append(instObj)
 
+    def dropInst(self, inst):
+        self.instruments.remove(inst)
+
+    def filtIPOnly(self):
+        for inst in self.instruments:
+            if 'IP' not in inst.id:
+                self.dropInst(inst)
+
 
 class Site:
     def __init__(self, name, siteID):

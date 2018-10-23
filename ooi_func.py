@@ -1,8 +1,10 @@
 import requests
+import pandas as pd
+import numpy as np
 import datetime as dt
 from time import sleep
 from ooicreds import UKEY, TOKE
-from ooi_globals import U, PRELOAD_URL, VERB
+from ooi_globals import U, PRELOAD_URL, VERB, LIMIT
 """Functions for the OOI package, to go with ooi_globals and ooi_classes."""
 
 # == Define Important Variables ===============================================
@@ -116,3 +118,87 @@ def lastSampleTime(site, node, inst, stream):
 
     # Convert to Datetime
     return dt.datetime.strptime(t_end, '%Y-%m-%dT%H:%M:%S.%fZ')
+
+
+# == Define getOffset Helper Function =========================================
+def getOffset(time_window):
+    # Case statement that returns the time offset given a time_window string.
+    if time_window == 'day':
+        return 1
+    elif time_window == 'week':
+        return 7
+    elif time_window == 'month':
+        return 30
+    elif time_window == 'year':
+        return 365
+    else:
+        raise Exception('Interval time not specified')
+
+
+# == Define epoch2dt Helper Function ==========================================
+def epoch2dt(t):
+    # Setup Offsets
+    offset = dt.datetime(1970, 1, 1, 0, 0, 0)-dt.datetime(1900, 1, 1, 0, 0, 0)
+    off_sec = dt.timedelta.total_seconds(offset)
+
+    # Convert using offsets
+    t_datetime = []
+    for tt in t:
+        t_sec = tt - off_sec
+        t_datetime.append(dt.datetime.utcfromtimestamp(t_sec))
+
+    return t_datetime
+
+
+# == Define startEndTimes(time_window) ========================================
+def startEndTimes(time_window):
+    t_end = dt.datetime.utcnow().isoformat() + 'Z'
+    dt_end = dt.datetime.strptime(t_end, '%Y-%m-%dT%H:%M:%S.%fZ')
+    dt_start = dt_end - dt.timedelta(days=getOffset(time_window))
+    t_start = dt_start.isoformat() + 'Z'
+    return t_start, t_end
+
+
+# == Define getIPData Helper Function =========================================
+def getIPData(inst_obj, time_window):
+    # Parameter Names List
+    params = ['sn_port_output_current', 'sn_port_unit_temperature',
+              'sn_port_gfd_high', 'sn_port_gfd_low']
+    # Get Start/End Times from time_window
+    t_start, t_end = startEndTimes(time_window)
+
+    # Assemble URL
+    url = U + inst_obj.parentSite + '/' + inst_obj.parentNode + '/'  \
+            + inst_obj.id + '/streamed/' + inst_obj.streams[0].name  \
+            + '?beginDT=' + t_start + '&endDT=' + t_end + '&limit='  \
+            + LIMIT + '&parameters=PD7100,PD7102,PD7103,PD7104,PD7'  \
+            + '&require_deployment=False'
+
+    # Send Request
+    raw_data = getData(url, 1)
+    data = pd.DataFrame.from_records(raw_data)
+
+    # Assign Data
+    inst_obj.ipData = []
+    inst_obj.time = epoch2dt(data['time'])
+    for pname in params:
+        x = np.array(data[pname], dtype=np.float)
+        x[x <= -9.9e5] = float('NaN')
+        inst_obj.ipData.append(list(x))
+    # inst_obj.ipData.append(list(data['sn_port_output_current']))
+    # inst_obj.ipData.append(list(data['sn_port_unit_temperature']))
+    # inst_obj.ipData.append(list(data['sn_port_gfd_high']))
+    # inst_obj.ipData.append(list(data['sn_port_gfd_low']))
+
+    # Apply Fill Value
+    for ii in range(0, len(inst_obj.ipData)):
+        inst_obj.ipData[ii][inst_obj.ipData[ii] < -9.9e5] = float('NaN')
+
+    # Assign Titles
+    inst_obj.ipTitles = []
+    inst_obj.ipTitles.append(inst_obj.parentNode + ' Port Currents')
+    inst_obj.ipTitles.append(inst_obj.parentNode + ' Port Temps')
+    inst_obj.ipTitles.append(inst_obj.parentNode + ' Port GFD High')
+    inst_obj.ipTitles.append(inst_obj.parentNode + ' Port GFD Low')
+
+    return inst_obj
