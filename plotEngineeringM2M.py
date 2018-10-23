@@ -98,5 +98,4 @@ for site in rsn.sites:
             fig_file += inst.ipTitles[ii-1].replace(' ', '_')
             print(fig_file + '.png')
             saveFig(fig_file, lgd)
-        break
-    break
+        plt.close('all')
