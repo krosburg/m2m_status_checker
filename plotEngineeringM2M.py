@@ -4,7 +4,6 @@ from ooi_func import printV
 # Define RSN Streams Object File
 in_file = 'rsn_eng_streams.pkl'
 
-
 # Load RSN Data Structure
 print('Loading %s' % in_file)
 with open(in_file, 'rb') as input:

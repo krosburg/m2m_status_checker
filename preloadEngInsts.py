@@ -13,7 +13,7 @@ requests.packages.urllib3.disable_warnings()
 # Engineering Only or Science Only? (True=Eng,False=Sci)
 ENG_ONLY = True
 
-# Instantiate a Container
+# Instantiate an OOI Container
 rsn = ooi.Array()
 
 # Loop on Sites
