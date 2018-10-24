@@ -9,7 +9,7 @@ from ooi_globals import U, PRELOAD_URL, VERB, LIMIT
 
 # == Define Important Variables ===============================================
 # Disable Annoying HTTPS Warnings
-requests.packages.urllib3.disable_warnings()
+requests.packages.urllib3.disable_warnings() ## find new alternative for p2.7
 
 # Status, Verify, and Timeout Variables
 SUCCESS_CODE = 200
@@ -176,6 +176,8 @@ def getIPData(inst_obj, time_window):
 
     # Send Request
     raw_data = getData(url, 1)
+    if not raw_data:
+        return [], t_start, t_end
     data = pd.DataFrame.from_records(raw_data)
 
     # Assign Data
@@ -185,20 +187,4 @@ def getIPData(inst_obj, time_window):
         x = np.array(data[pname], dtype=np.float)
         x[x <= -9.9e5] = float('NaN')
         inst_obj.ipData.append(list(x))
-    # inst_obj.ipData.append(list(data['sn_port_output_current']))
-    # inst_obj.ipData.append(list(data['sn_port_unit_temperature']))
-    # inst_obj.ipData.append(list(data['sn_port_gfd_high']))
-    # inst_obj.ipData.append(list(data['sn_port_gfd_low']))
-
-    # Apply Fill Value
-    for ii in range(0, len(inst_obj.ipData)):
-        inst_obj.ipData[ii][inst_obj.ipData[ii] < -9.9e5] = float('NaN')
-
-    # Assign Titles
-    inst_obj.ipTitles = []
-    inst_obj.ipTitles.append(inst_obj.parentNode + ' Port Currents')
-    inst_obj.ipTitles.append(inst_obj.parentNode + ' Port Temps')
-    inst_obj.ipTitles.append(inst_obj.parentNode + ' Port GFD High')
-    inst_obj.ipTitles.append(inst_obj.parentNode + ' Port GFD Low')
-
-    return inst_obj
+    return inst_obj, t_start, t_end

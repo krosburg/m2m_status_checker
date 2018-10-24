@@ -1,6 +1,9 @@
-import cPickle as pickle
 import datetime as dt
 from ooi_func import printV, lastSampleTime
+try:
+    import cPickle as pickle
+except ModuleNotFoundError:
+    import pickle
 
 # Color Time Cutoffs (hours)
 YEL_CUTOFF = 12

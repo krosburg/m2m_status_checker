@@ -1,10 +1,13 @@
 import requests
 import time
 import ooi_classes as ooi
-import cPickle as pickle
 from ooi_func import printV, getStreamType, getData
 from ooi_func import getSites, getInstruments, getStreams
 from ooi_globals import U, wanted_nodes
+try:
+    import cPickle as pickle
+except ModuleNotFoundError:
+    import pickle
 
 
 # Disable Annoying HTTPS Warnings

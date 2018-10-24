@@ -1,24 +1,43 @@
-
-import cPickle as pickle
+import sys
+import matplotlib
+matplotlib.use('Agg')
 import numpy as np
 from PIL import Image
 from os import remove
 from matplotlib import dates as mdates
 from matplotlib import pyplot as plt
 from ooi_func import printV, getIPData
+try:
+    import cPickle as pickle
+except ModuleNotFoundError:
+    import pickle
 
 
 # Define Functions:
 def saveFig(fname, lgd):
-    plt.savefig(fig_file + '.png',
+    plt.savefig(fname + '.png',
                 bbox_extra_artists=(lgd,),
                 bbox_inches='tight')
     Image.open(fig_file+'.png').convert('RGB').save(fig_file + '.jpg', 'JPEG')
     remove(fig_file + '.png')
 
+def getArgs():
+    """Retrieves importand cmd-line args."""
+    if len(sys.argv) < 2:
+        print('No time windows supplied, using day.')
+        return 'day'
+    else:
+        t_win = str(sys.argv[1]).lower()
+        if t_win not in ['day', 'week', 'month', 'year']:
+            raise Exception('Invalid time window, using day')
+            return 'day'
+        return t_win
+
 
 # Define Variables
-t_window = 'year'
+t_window = getArgs()
+img_dir = '/var/www/html/engm2m/images/' + t_window + '/'
+tstrs = ['Port Currents', 'Port Temps', 'Port GFD High', 'Port GFD Low']
 ylabs = ['milliAmps', 'deg', 'microAmps', 'microAmps']
 
 # Define RSN Streams Object File
@@ -54,11 +73,12 @@ for site in rsn.sites:
             stream = inst.streams[0]
 
             # Print Results
-            printV('%s-%s-%s:' % (site.id, node.id, inst.id))
-            printV('  %s' % stream.name)
+            printV('%s-%s-%s' % (site.id, node.id, inst.id))
 
             # Get IP Data
-            inst = getIPData(inst, t_window)
+            inst, t_start, t_end = getIPData(inst, t_window)
+            if not inst:
+                continue
 
             # Loop on IP Parameters to Plot
             figNum = 1
@@ -80,13 +100,16 @@ for site in rsn.sites:
             fig = plt.figure(ii, figsize=(18, 4.475))
 
             # Add Y-Label, Title, and Grid
+            tstr = node.id + ' ' + tstrs[ii-1]
+            plt.xlim(t_start, t_end)
             plt.ylabel(ylabs[ii-1])
-            plt.title(inst.ipTitles[ii-1])
+            plt.title(tstr)
             plt.grid(True, linestyle='dashed', linewidth=2)
 
             # Tidy up the X-Axis
             ax = plt.gca()
-            ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M\n%m-%d'))
+            ax.xaxis_date()
+            ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M\n%m-%d-%y'))
 
             # Add Legend
             box_y = -.45*(1 + ((len(node.instruments)-1)*.225))
@@ -94,8 +117,7 @@ for site in rsn.sites:
                              fontsize=20, frameon=False)
 
             # Save Figures
-            fig_file = './' + site.id + '-'
-            fig_file += inst.ipTitles[ii-1].replace(' ', '_')
+            fig_file = img_dir + site.id + '-' + tstr.replace(' ', '_')
             print(fig_file + '.png')
             saveFig(fig_file, lgd)
         plt.close('all')
