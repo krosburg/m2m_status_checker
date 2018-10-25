@@ -7,7 +7,7 @@ from os import remove
 from matplotlib import dates as mdates
 from matplotlib import pyplot as plt
 from datetime import datetime
-from ooi_func import printV, getIPData
+from ooi_func import getIPData
 try:
     import cPickle as pickle
 except ModuleNotFoundError:
