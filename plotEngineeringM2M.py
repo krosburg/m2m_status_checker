@@ -6,6 +6,7 @@ from PIL import Image
 from os import remove
 from matplotlib import dates as mdates
 from matplotlib import pyplot as plt
+from datetime import datetime
 from ooi_func import printV, getIPData
 try:
     import cPickle as pickle
@@ -15,14 +16,18 @@ except ModuleNotFoundError:
 
 # Define Functions:
 def saveFig(fname, lgd):
-    plt.savefig(fname + '.png',
-                bbox_extra_artists=(lgd,),
-                bbox_inches='tight')
+    """Saves the figure"""
+    if err_flag:
+        plt.savefig(fname + '.png', bbox_inches='tight')
+    else:
+        plt.savefig(fname + '.png',
+                    bbox_extra_artists=(lgd,), 
+                    bbox_inches='tight')
     Image.open(fig_file+'.png').convert('RGB').save(fig_file + '.jpg', 'JPEG')
     remove(fig_file + '.png')
 
 def getArgs():
-    """Retrieves importand cmd-line args."""
+    """Retrieves important cmd-line args."""
     if len(sys.argv) < 2:
         print('No time windows supplied, using day.')
         return 'day'
@@ -32,6 +37,35 @@ def getArgs():
             raise Exception('Invalid time window, using day')
             return 'day'
         return t_win
+
+def makePlotNice():
+    """Add xlims, ylabel, title, and grid to plot"""
+    plt.xlim(t_start, t_end)
+    plt.ylabel(ylabs[ii-1])
+    plt.title(tstr)
+    plt.grid(True, linestyle='dashed', linewidth=2)
+
+def tidyXAxis(date_fmt):
+    """Formats xaxis dates"""
+    ax = plt.gca()
+    ax.xaxis_date()
+    ax.xaxis.set_major_formatter(mdates.DateFormatter(date_fmt))
+
+def addLegend():
+    """Adds legend to plot."""
+    box_y = -.45*(1 + ((len(node.instruments)-1)*.225))
+    return plt.legend(loc='lower right', bbox_to_anchor=(1.005, box_y),
+                      fontsize=20, frameon=False)
+
+def errorPlot():
+    """Plots default error plot and returns new x-axis limits."""
+    print('No Data. Making error plot.')
+    plt.plot()
+    plt.text(0, 0, 'ERROR',
+             ha='center', va='center', size=60, color='red')
+    plt.text(0, -0.02, 'No Data Returned from M2M Query',
+             ha='center', va='center', size=40, color='black')
+    return plt.xlim()
 
 
 # Define Variables
@@ -56,6 +90,7 @@ for site in rsn.sites:
 
     # Loop on Nodes for Site
     for node in site.nodes:
+        print(datetime.now())
         # Skip if No Instruments
         if not node.instruments:
             continue
@@ -64,33 +99,30 @@ for site in rsn.sites:
         node.filtIPOnly()
 
         # Loop on Instrument for Node
+        err_flag = True
         for inst in node.instruments:
+
             # Skip if No Streams
             if not inst.streams:
                 continue
 
-            # Isoloate Stream
-            stream = inst.streams[0]
-
-            # Print Results
-            printV('%s-%s-%s' % (site.id, node.id, inst.id))
-
             # Get IP Data
             inst, t_start, t_end = getIPData(inst, t_window)
             if not inst:
+                print(' Data return empty: Skipping...')
                 continue
+            else:
+                err_flag = False
 
             # Loop on IP Parameters to Plot
             figNum = 1
             for data in inst.ipData:
-                # Instantiate/Switch-to the Figure
-                fig = plt.figure(figNum, figsize=(18, 4.475))
-
                 # Assemble Plot Label
                 plt_lab = 'J%s avg: %2.2f, max: %2.2f' % (inst.id,
                                                           np.nanmean(data),
                                                           np.nanmax(data))
-                # Plot Data
+                # Instantiate Figure and Plot Data; Incrament Counter
+                fig = plt.figure(figNum, figsize=(18, 4.475))
                 plt.plot(inst.time, data, label=plt_lab)
                 figNum += 1
 
@@ -99,25 +131,33 @@ for site in rsn.sites:
             # Switch To Figure
             fig = plt.figure(ii, figsize=(18, 4.475))
 
+            if err_flag:
+                t_start, t_end = errorPlot()
+#                print('No Data. Making error plot.')
+#                plt.plot()
+#                plt.text(0, 0, 'ERROR',
+#                         ha='center', va='center', size=60, color='red')
+#                plt.text(0, -0.02, 'No Data Returned from M2M Query',
+#                         ha='center', va='center', size=40, color='black')
+#                t_start, t_end = plt.xlim()
+
             # Add Y-Label, Title, and Grid
             tstr = node.id + ' ' + tstrs[ii-1]
-            plt.xlim(t_start, t_end)
-            plt.ylabel(ylabs[ii-1])
-            plt.title(tstr)
-            plt.grid(True, linestyle='dashed', linewidth=2)
+            makePlotNice()
 
             # Tidy up the X-Axis
-            ax = plt.gca()
-            ax.xaxis_date()
-            ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M\n%m-%d-%y'))
+            if not err_flag:
+                tidyXAxis('%H:%M\n%m-%d-%y')
 
             # Add Legend
-            box_y = -.45*(1 + ((len(node.instruments)-1)*.225))
-            lgd = plt.legend(loc='lower right', bbox_to_anchor=(1.005, box_y),
-                             fontsize=20, frameon=False)
+            if err_flag:
+                lgd = []
+            else:
+                lgd = addLegend()
 
             # Save Figures
             fig_file = img_dir + site.id + '-' + tstr.replace(' ', '_')
-            print(fig_file + '.png')
+            print(fig_file + '.png updated')
             saveFig(fig_file, lgd)
         plt.close('all')
+        print(' ')
