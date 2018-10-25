@@ -47,7 +47,7 @@ def getData(url, pause=0):
         raw_data = requests.get(url, auth=(UKEY, TOKE),
                                 timeout=TIMEOUT, verify=VERIFY)
         if not raw_data.status_code == SUCCESS_CODE:
-            print('WARNING: Request failed w/ error %i' % raw_data.status_code)
+            printV('WARN: Request failed w/ error %i' % raw_data.status_code)
             printV('   Error message resonse:\n      %s' % raw_data.json())
             return []
         return raw_data.json()
