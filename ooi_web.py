@@ -1,12 +1,15 @@
 from os.path import isfile
 
-def writeNavHeader(fname):
+def writeNavHeader(fname,title_str):
     f = open(fname, 'w+')
+    f.write('<!-- PAGE CREATED BY OOI_WEB.PY -->\n')
     f.write('<html>\n')
     f.write('<head>\n')
     f.write('\t<meta http-equiv="refresh" content="3600" />\n')
     f.write('\t<title>Links</title>\n</head>\n\n')
     f.write('<ul>\n')
+    f.write('\t<script src="../topNavLinks.js"></script>\n')
+    f.write('\t<b>%s</b>' % title_str)
     f.close()
 
 

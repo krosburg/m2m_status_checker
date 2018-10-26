@@ -133,13 +133,6 @@ for site in rsn.sites:
 
             if err_flag:
                 t_start, t_end = errorPlot()
-#                print('No Data. Making error plot.')
-#                plt.plot()
-#                plt.text(0, 0, 'ERROR',
-#                         ha='center', va='center', size=60, color='red')
-#                plt.text(0, -0.02, 'No Data Returned from M2M Query',
-#                         ha='center', va='center', size=40, color='black')
-#                t_start, t_end = plt.xlim()
 
             # Add Y-Label, Title, and Grid
             tstr = node.id + ' ' + tstrs[ii-1]
