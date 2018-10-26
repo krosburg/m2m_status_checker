@@ -7,7 +7,7 @@ from os import remove
 from matplotlib import dates as mdates
 from matplotlib import pyplot as plt
 from datetime import datetime
-from ooi_func import getIPData
+from ooi_func import getIPData, getTimeWinArg
 try:
     import cPickle as pickle
 except ModuleNotFoundError:
@@ -26,17 +26,17 @@ def saveFig(fname, lgd):
     Image.open(fig_file+'.png').convert('RGB').save(fig_file + '.jpg', 'JPEG')
     remove(fig_file + '.png')
 
-def getArgs():
-    """Retrieves important cmd-line args."""
-    if len(sys.argv) < 2:
-        print('No time windows supplied, using day.')
-        return 'day'
-    else:
-        t_win = str(sys.argv[1]).lower()
-        if t_win not in ['day', 'week', 'month', 'year']:
-            raise Exception('Invalid time window, using day')
-            return 'day'
-        return t_win
+#def getArgs():
+#    """Retrieves important cmd-line args."""
+#    if len(sys.argv) < 2:
+#        print('No time windows supplied, using day.')
+#        return 'day'
+#    else:
+#        t_win = str(sys.argv[1]).lower()
+#        if t_win not in ['day', 'week', 'month', 'year']:
+#            raise Exception('Invalid time window, using day')
+#            return 'day'
+#        return t_win
 
 def makePlotNice():
     """Add xlims, ylabel, title, and grid to plot"""
@@ -69,7 +69,7 @@ def errorPlot():
 
 
 # Define Variables
-t_window = getArgs()
+t_window = getTimeWinArg()
 img_dir = '/var/www/html/engm2m/images/' + t_window + '/'
 tstrs = ['Port Currents', 'Port Temps', 'Port GFD High', 'Port GFD Low']
 ylabs = ['milliAmps', 'deg', 'microAmps', 'microAmps']
@@ -108,6 +108,7 @@ for site in rsn.sites:
 
             # Get IP Data
             inst, t_start, t_end = getIPData(inst, t_window)
+
             if not inst:
                 print(' Data return empty: Skipping...')
                 continue

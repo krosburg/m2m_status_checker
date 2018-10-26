@@ -1,4 +1,4 @@
-import requests
+import requests, sys
 import pandas as pd
 import numpy as np
 import datetime as dt
@@ -26,6 +26,20 @@ def printV(msg):
     """Prints MSG if the global variable VERB=True."""
     if VERB:
         print(msg)
+
+
+#== Define getArgs Helper Function ============================================
+def getTimeWinArg():
+    """Retrieves commandline argument for time-window for ploting"""
+    if len(sys.argv) < 2:
+        print('No time windows supplied, using day.')
+        return 'day'
+    else:
+        t_win = str(sys.argv[1]).lower()
+        if t_win not in ['day', 'week', 'month', 'year']:
+            raise Exception('Invalid time window, using day')
+            return 'day'
+        return t_win
 
 
 # == Define getStreamType Helper Function =====================================
