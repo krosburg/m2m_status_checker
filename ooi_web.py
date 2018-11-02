@@ -69,9 +69,8 @@ def writePlotNavInstLI(fname, node, inst):
     inst = inst.split('-')[1]
 
     # Setup Node URL and Window List
-    url_base = 'index.php?node=' + node
-    url_base += '&inst=' + inst + '&labels=no&org=2&size=350'
-    url_base += '&window='
+    url_base = 'index.php?inst=' + inst + '&labels=no&org=2&size=450'
+    url_base += '&warn=no&window='
     t_list = ['day', 'week', 'month', 'year']
 
     # Begin List and Write Node Link
