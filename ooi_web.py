@@ -65,14 +65,14 @@ def writePlotNavInstLI(fname, node, inst):
     # Open file for writing
     f = open(fname, 'a')
 
+    # Massage Inst Variable (remove port number)
+    inst = inst.split('-')[1]
+
     # Setup Node URL and Window List
     url_base = 'index.php?node=' + node
     url_base += '&inst=' + inst + '&labels=no&org=2&size=350'
     url_base += '&window='
     t_list = ['day', 'week', 'month', 'year']
-
-    # Massage Inst Variable (remove port number)
-    inst = inst.split('-')[1]
 
     # Begin List and Write Node Link
     f.write('\t\t\t<li>\n')

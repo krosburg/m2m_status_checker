@@ -15,7 +15,7 @@ with open(rsn_file, 'rb') as input:
     rsn = pickle.load(input)
 
 # Print HTML Header
-o.writeNavHeader(web_file, 'M2M Engineering Page')
+o.writeNavHeader(web_file, 'M2M Science Data Page')
 
 # Loop on Sites, Nodes, Instruments, Streams
 for site in rsn.sites:
