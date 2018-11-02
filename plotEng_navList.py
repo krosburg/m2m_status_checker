@@ -1,4 +1,4 @@
-from ooi_web import writeNavHeader, writeNavNodeLI, writeNavFooter
+from ooi_web import writeNavHeader, writeEngNavNodeLI, writeNavFooter
 try:
     import cPickle as pickle
 except ModuleNotFoundError:
@@ -32,7 +32,7 @@ for site in rsn.sites:
         if not node.instruments:
             continue
 
-        writeNavNodeLI(web_file, node.id)
+        writeEngNavNodeLI(web_file, node.id)
 
 # Finalize HTML FILE
 writeNavFooter(web_file)
