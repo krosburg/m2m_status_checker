@@ -24,6 +24,7 @@ def writePlotSummary(fname):
     t_list = ['day', 'week', 'month', 'year']
 
     # Begin List and Write Node Link
+    f.write('\t<br><br>\n')
     f.write('\t<li>\n')
     f.write('\t\t<a href="%sday" target="content">Summary</a>\n' % (url_base))
 
@@ -32,6 +33,7 @@ def writePlotSummary(fname):
         url = url_base + twin
         f.write('\t\t<a href="%s" target="content">(%s)</a>\n' % (url, twin[0]))
     f.write('\t</li>\n\n')
+    f.write('\t<br>\n')
 
     # Close File
     f.close()
