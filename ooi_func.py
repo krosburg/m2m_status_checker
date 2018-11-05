@@ -102,6 +102,17 @@ def getInstruments(site, node, ENG_ONLY):
                 and 'HYD' not in inst]
 
 
+# == Define getInstruments Helper Function ====================================
+def getOBSInstruments(site, node):
+    """getInstruments(site, node): Returns a list of OBS SEIS instruments.
+    Requires global variables U, UKEY, TOKE, TIMEOUT, VERIFY to be set."""
+    # Request Data from M2M
+    res = getData(U + site + '/' + node)
+
+    # Filter Instrument List Based on OBS
+    return [inst for inst in res if 'OBS' in inst]
+
+
 # == Define getStreams Helper Function ========================================
 def getStreams(site, node, inst):
     """Gets a list of streams for a given site-node-inst combo."""
