@@ -11,7 +11,10 @@ except ModuleNotFoundError:
 
 
 # Disable Annoying HTTPS Warnings
-requests.packages.urllib3.disable_warnings()
+try:
+    requests.packages.urllib3.disable_warnings()
+except Err:
+    print("Cannot shut off warnings")
 
 # Engineering Only or Science Only? (True=Eng,False=Sci)
 ENG_ONLY = False
@@ -44,7 +47,7 @@ for siteID in getSites():
 
         # Request Instruments at Given Node
         printV('  Getting instruments for %s' % nodeID)
-        instIDs = getInstruments(siteID, nodeID, ENG_ONLY)
+        instIDs = getOBSInstruments(siteID, nodeID)
 
         # Skip if No Instruments
         if not instIDs:
@@ -94,7 +97,7 @@ for siteID in getSites():
     time.sleep(5)
 
 # Save The Structure
-out_file = './rsn_streams.pkl'
+out_file = './rsn_OBS_streams.pkl'
 print('Saving as ' + out_file + '... ', '')
 with open(out_file, 'wb') as output:
     pickle.dump(rsn, output, pickle.HIGHEST_PROTOCOL)
