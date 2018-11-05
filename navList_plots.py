@@ -17,6 +17,10 @@ with open(rsn_file, 'rb') as input:
 # Print HTML Header
 o.writeNavHeader(web_file, 'M2M Science Data Page')
 
+# Print Summary Page
+o.writePlotSummary(web_file)
+
+
 # Loop on Sites, Nodes, Instruments, Streams
 for site in rsn.sites:
     if not site.nodes:
