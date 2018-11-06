@@ -12,6 +12,34 @@ def writeNavHeader(fname,title_str):
     f.write('\t<b>%s</b>\n\n' % title_str)
     f.close()
 
+
+def writeENGSummary(fname):
+    # If file doesn't exist, create it and write header
+    if isfile(fname):
+        f = open(fname, 'a')
+    else:
+        writeHeader(fname)
+
+    # Setup Node URL and Window Lit
+    url_base = 'plotDisplay.php?&window='
+    t_list = ['day', 'week', 'month', 'year']
+
+    # Begin List and Write Node Link
+    f.write('\t<br><br>\n')
+    f.write('\t<li>\n')
+    f.write('\t\t<a href="%sday" target="content">Summary</a>\n' % (url_base))
+
+    # Write (d), (m), etc Links
+    for twin in t_list:
+        url = url_base + twin
+        f.write('\t\t<a href="%s" target="content">(%s)</a>\n' % (url, twin[0]))
+    f.write('\t</li>\n\n')
+    f.write('\t<br>\n')
+
+    # Close File
+    f.close()
+
+    
 def writePlotSummary(fname):
     # If file doesn't exist, create it and write header
     if isfile(fname):

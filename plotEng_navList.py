@@ -1,4 +1,5 @@
 from ooi_web import writeNavHeader, writeEngNavNodeLI, writeNavFooter
+from ooi_web import writeENGSummary
 try:
     import cPickle as pickle
 except ModuleNotFoundError:
@@ -16,6 +17,9 @@ with open(eng_file, 'rb') as input:
 
 # Print HTML Header
 writeNavHeader(web_file, 'M2M Engineering Page')
+
+# Print Summary Links
+writeENGSummary(web_file)
 
 # Loop on Sites, Nodes, Instruments, Streams
 for site in rsn.sites:
