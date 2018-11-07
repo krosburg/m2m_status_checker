@@ -65,8 +65,11 @@ def getData(url, pause=0):
         raw_data = requests.get(url, auth=(UKEY, TOKE),
                                 timeout=TIMEOUT, verify=VERIFY)
         if not raw_data.status_code == SUCCESS_CODE:
-            printV('WARN: Request failed w/ error %i' % raw_data.status_code)
-            printV('   Error message resonse:\n      %s' % raw_data.json())
+            if raw_data.status_code == 404:
+                printV('WARN: M2M Returned no data (404).')
+            else:
+                printV('WARN: Request failed w/ error %i' % raw_data.status_code)
+                printV('   Error message resonse:\n      %s' % raw_data.json())
             return []
         return raw_data.json()
 
@@ -197,6 +200,10 @@ def getIPData(inst_obj, time_window):
     # Get Start/End Times from time_window
     t_start, t_end = startEndTimes(time_window)
 
+    # Fix Some Issues w/ LV Nodes
+    if 'LV' in inst_obj.parentNode or len(inst_obj.streams) > 1:
+        inst_obj.streams[0].name = 'secondary_node_port_eng_data'
+
     # Assemble URL
     url = U + inst_obj.parentSite + '/' + inst_obj.parentNode + '/'  \
             + inst_obj.id + '/streamed/' + inst_obj.streams[0].name  \
@@ -217,4 +224,38 @@ def getIPData(inst_obj, time_window):
         x = np.array(data[pname], dtype=np.float)
         x[x <= -9.9e5] = float('NaN')
         inst_obj.ipData.append(list(x))
+    return inst_obj, t_start, t_end
+
+
+# == Define getPDData Helper Function =========================================
+def getPDData(inst_obj, time_window):
+    # Parameter names List
+    params = ['dp_dock_ambient_temperature',
+              'dp_dock_heat_sink_temperature',
+              'dp_dock_relative_humidity',
+              'dp_dock_12_v_current']
+
+    # Get Start/End Times from time_window
+    t_start, t_end = startEndTimes(time_window)
+
+    # Assemble URL
+    url = U + inst_obj.parentSite + '/' + inst_obj.parentNode + '/'  \
+            + inst_obj.id + '/streamed/' + inst_obj.streams[0].name  \
+            + '?beginDT=' + t_start + '&endDT=' + t_end + '&limit='  \
+            + LIMIT + '&parameters=PD7201,PD7202,PD7204,PD7200,PD7'  \
+            + '&require_deployment=False'
+
+    # Send Request
+    raw_data = getData(url, 1)
+    if not raw_data:
+        return [], t_start, t_end
+    data = pd.DataFrame.from_records(raw_data)
+
+    # Assign Data
+    inst_obj.data = []
+    inst_obj.time = epoch2dt(data['time'])
+    for pname in params:
+        x = np.array(data[pname], dtype=np.float)
+        x[x <= -9.9e5] = float('NaN')
+        inst_obj.data.append(list(x))
     return inst_obj, t_start, t_end

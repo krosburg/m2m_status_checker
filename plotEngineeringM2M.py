@@ -7,7 +7,7 @@ from os import remove
 from matplotlib import dates as mdates
 from matplotlib import pyplot as plt
 from datetime import datetime
-from ooi_func import getIPData, getTimeWinArg
+from ooi_func import getIPData, getTimeWinArg, getPDData
 try:
     import cPickle as pickle
 except ModuleNotFoundError:
@@ -43,7 +43,7 @@ def tidyXAxis(date_fmt, tsize):
 
 def addLegend():
     """Adds legend to plot."""
-    box_y = -.45*(1 + ((len(node.instruments)-1)*.225))
+    box_y = -.50*(1 + ((len(node.instruments)-1)*.225))
     return plt.legend(loc='lower right', bbox_to_anchor=(1.005, box_y),
                       fontsize=20, frameon=False)
 
@@ -75,6 +75,7 @@ title_wt = "bold"
 # Define RSN Streams Object File
 in_file = 'rsn_eng_streams.pkl'
 
+
 # Load RSN Data Structure
 print('Loading %s' % in_file)
 with open(in_file, 'rb') as input:
@@ -86,8 +87,11 @@ for site in rsn.sites:
     if not site.nodes:
         continue
 
+    # Filter only for PD nodes
+    nodes = [n for n in site.nodes if 'PD' not in n.id]
+
     # Loop on Nodes for Site
-    for node in site.nodes:
+    for node in nodes:
         print(datetime.now())
         # Skip if No Instruments
         if not node.instruments:
@@ -152,4 +156,83 @@ for site in rsn.sites:
             print(fig_file + '.png updated')
             saveFig(fig_file, lgd)
         plt.close('all')
+        print(' ')
+
+
+# == NOW PLOT ONLY FOR PD STREAMS ===========
+with open(in_file, 'rb') as input:
+    rsn = pickle.load(input)
+tstrs = ['Dock Temperature', 'Dock 12 Volt Current', 'Dock Humidity']
+# Loop on Sites, Nodes, Instruments, Streams
+for site in rsn.sites:
+    # Skip if No Nodes
+    if not site.nodes:
+        continue
+
+    # Filter only for PD nodes
+    nodes = [n for n in site.nodes if 'PD' in n.id]
+
+    # Skip if filtering results in empty list
+    if not nodes:
+        continue
+
+    # Loop on Nodes for Site
+    for node in nodes:
+        print('%s %s-%s' % (datetime.now(), site.id,node.id))
+        # Skip if No Instruments
+        if not node.instruments:
+            continue
+
+        # Loop on Instrument for Node
+        err_flag = True
+        for inst in node.instruments:
+
+            # Skip if No Streams
+            if not inst.streams:
+                continue
+
+            # Get IP Data
+            inst, t_start, t_end = getPDData(inst, t_window)
+
+            if not inst:
+                print(' Data return empty: Skipping...')
+                continue
+            else:
+                err_flag = False
+
+
+            # Plot Temperature
+            fig = plt.figure(1, figsize=(18, 4.475))
+            plt.plot(inst.time, inst.data[0], label='Dock Temp')
+            plt.plot(inst.time, inst.data[1], label='Heat Sink Temp')
+            if err_flag:
+                t_start, t_end = errorPlot()
+                
+
+            # Plot Current
+            fig = plt.figure(2, figsize=(18, 4.475))
+            plt.plot(inst.time, inst.data[2], label='12 Volt Current')
+            if err_flag:
+                t_start, t_end = errorPlot()
+
+            # Plot Current
+            fig = plt.figure(3, figsize=(18, 4.475))
+            plt.plot(inst.time, inst.data[3], label='Relative Humidity')
+            if err_flag:
+                t_start, t_end = errorPlot()
+
+            # Return toe ach plot and clean up
+            for ii in range(1, 3):
+                fig = plt.figure(ii, figsize=(18, 4.475))
+                tstr = node.id + ' ' + tstrs[ii-1]
+                makePlotNice()
+                if err_flag:
+                    lgd = []
+                else:
+                    tidyXAxis('%H:%M\n%m-%d-%y', value_size)
+                    lgd = addLegend()
+                fig_file = img_dir + site.id + '-' + tstr.replace(' ', '_')
+                print(fig_file + '.png updated')
+                saveFig(fig_file, lgd)
+            plt.close('all')
         print(' ')
