@@ -93,7 +93,8 @@ def getInstruments(site, node, ENG_ONLY):
 
     # Filter Instrument List Based on Global ENG_ONLY Flag
     if ENG_ONLY:
-        return [inst for inst in res if 'ENG' in inst or 'IP' in inst]
+        return [inst for inst in res
+                if 'ENG' in inst or 'IP' in inst or 'EP' in inst]
     else:
         return [inst for inst in res if 'ENG' not in inst
                 and 'IP' not in inst

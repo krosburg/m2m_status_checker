@@ -12,3 +12,11 @@ wanted_nodes = ['LJ01A', 'MJ01A', 'SF01A', 'PC01A', 'LJ01B', 'DP01A',
                 'MJ01B', 'LJ01C', 'SF01B', 'PC01B', 'DP01B', 'MJ01C',
                 'LJ01D', 'MJ03A', 'LJ03A', 'PC03A', 'SF03A', 'MJ03B',
                 'MJ03E', 'MJ03F', 'DP03A', 'MJ03C', 'MJ03D']
+
+# Setup Wanted Nodes for ENG
+wanted_eng = ['LJ01A', 'MJ01A', 'SF01A', 'PC01A', 'LJ01B', 'DP01A',
+              'MJ01B', 'LJ01C', 'SF01B', 'PC01B', 'DP01B', 'MJ01C',
+              'LJ01D', 'MJ03A', 'LJ03A', 'PC03A', 'SF03A', 'MJ03B',
+              'MJ03E', 'MJ03F', 'DP03A', 'MJ03C', 'MJ03D', 'PN03B',
+              'LV01A', 'LV01B', 'LV01C', 'LV03A', 'PD01A', 'PD01B',
+              'PD03A']
