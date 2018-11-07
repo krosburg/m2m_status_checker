@@ -9,7 +9,11 @@ from ooi_globals import U, PRELOAD_URL, VERB, LIMIT
 
 # == Define Important Variables ===============================================
 # Disable Annoying HTTPS Warnings
-#requests.packages.urllib3.disable_warnings() ## find new alternative for p2.7
+try:
+    requests.packages.urllib3.disable_warnings()
+except ModuleNotFoundError:
+    import urllib3
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # Status, Verify, and Timeout Variables
 SUCCESS_CODE = 200
