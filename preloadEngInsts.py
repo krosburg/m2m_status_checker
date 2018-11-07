@@ -3,7 +3,8 @@ import time
 import ooi_classes as ooi
 from ooi_func import printV, getStreamType, getData
 from ooi_func import getSites, getInstruments, getStreams
-from ooi_globals import U, wanted_nodes
+from ooi_globals import U
+from ooi_globals import wanted_eng as wanted_nodes
 try:
     import cPickle as pickle
 except ModuleNotFoundError:
@@ -11,7 +12,10 @@ except ModuleNotFoundError:
 
 
 # Disable Annoying HTTPS Warnings
-requests.packages.urllib3.disable_warnings()
+try:
+    requests.packages.urllib3.disable_warnings()
+except ModuleNotFoundError:
+    None
 
 # Engineering Only or Science Only? (True=Eng,False=Sci)
 ENG_ONLY = True
