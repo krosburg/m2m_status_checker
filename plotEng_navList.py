@@ -32,7 +32,7 @@ for site in rsn.sites:
             continue
 
         # Filter Instruments to IP Only
-        node.filtIPOnly()
+#        node.filtIPOnly()
         if not node.instruments:
             continue
 
