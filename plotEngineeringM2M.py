@@ -26,30 +26,20 @@ def saveFig(fname, lgd):
     Image.open(fig_file+'.png').convert('RGB').save(fig_file + '.jpg', 'JPEG')
     remove(fig_file + '.png')
 
-#def getArgs():
-#    """Retrieves important cmd-line args."""
-#    if len(sys.argv) < 2:
-#        print('No time windows supplied, using day.')
-#        return 'day'
-#    else:
-#        t_win = str(sys.argv[1]).lower()
-#        if t_win not in ['day', 'week', 'month', 'year']:
-#            raise Exception('Invalid time window, using day')
-#            return 'day'
-#        return t_win
 
 def makePlotNice():
     """Add xlims, ylabel, title, and grid to plot"""
     plt.xlim(t_start, t_end)
-    plt.ylabel(ylabs[ii-1])
-    plt.title(tstr)
+    plt.ylabel(ylabs[ii-1], fontsize=label_size, fontweight=label_wt)
+    plt.title(tstr, fontsize=title_size, fontweight=title_wt)
     plt.grid(True, linestyle='dashed', linewidth=2)
 
-def tidyXAxis(date_fmt):
+def tidyXAxis(date_fmt, tsize):
     """Formats xaxis dates"""
     ax = plt.gca()
     ax.xaxis_date()
     ax.xaxis.set_major_formatter(mdates.DateFormatter(date_fmt))
+    plt.tick_params(labelsize=tsize)
 
 def addLegend():
     """Adds legend to plot."""
@@ -73,6 +63,14 @@ t_window = getTimeWinArg()
 img_dir = '/var/www/html/engm2m/images/' + t_window + '/'
 tstrs = ['Port Currents', 'Port Temps', 'Port GFD High', 'Port GFD Low']
 ylabs = ['milliAmps', 'deg', 'microAmps', 'microAmps']
+
+# Define Plotting Variables
+label_size = 23
+title_size = 30
+value_size = 22
+legtx_size = 24
+label_wt = "bold"
+title_wt = "bold"
 
 # Define RSN Streams Object File
 in_file = 'rsn_eng_streams.pkl'
@@ -141,7 +139,7 @@ for site in rsn.sites:
 
             # Tidy up the X-Axis
             if not err_flag:
-                tidyXAxis('%H:%M\n%m-%d-%y')
+                tidyXAxis('%H:%M\n%m-%d-%y', value_size)
 
             # Add Legend
             if err_flag:
