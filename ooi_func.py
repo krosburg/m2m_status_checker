@@ -75,7 +75,8 @@ def getData(url, pause=0):
 
     except Exception as err:
         print('Exception: %s' % str(err))
-        quit()
+        #quit()
+        return []
 
 
 # == Define GetSites Helper Function ==========================================
