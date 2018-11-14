@@ -97,6 +97,13 @@ for site in rsn.sites:
         if not node.instruments:
             continue
 
+        # Skip "Bad" site-node pairs
+        if site.id == "RS01OSBP":
+            if node.id == "PC01B" or node.id == "SF01B":
+                continue
+        elif site.id == "RS01SUM1":
+            continue
+
         # Filter Instruments to IP Only
         node.filtIPOnly()
 

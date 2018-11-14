@@ -245,6 +245,13 @@ def getPDData(inst_obj, time_window):
     # Get Start/End Times from time_window
     t_start, t_end = startEndTimes(time_window)
 
+    # Print data to file
+    #f = open("eng_test_file.txt", "a")
+    #f.write("%s,%s,%s,%s\n" % (inst_obj.parentSite, inst_obj.parentNode,
+    #                           inst_obj.id, inst_obj.streams[0].name))
+    #f.close()
+
+
     # Assemble URL
     url = U + inst_obj.parentSite + '/' + inst_obj.parentNode + '/'  \
             + inst_obj.id + '/streamed/' + inst_obj.streams[0].name  \
