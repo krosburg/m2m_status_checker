@@ -205,6 +205,12 @@ def getIPData(inst_obj, time_window):
     if 'LV' in inst_obj.parentNode or len(inst_obj.streams) > 1:
         inst_obj.streams[0].name = 'secondary_node_port_eng_data'
 
+    # Print data to file
+    #f = open("eng_test_file.txt", "a")
+    #f.write("%s,%s,%s,%s\n" % (inst_obj.parentSite, inst_obj.parentNode,
+    #                           inst_obj.id, inst_obj.streams[0].name))
+    #f.close()
+
     # Assemble URL
     url = U + inst_obj.parentSite + '/' + inst_obj.parentNode + '/'  \
             + inst_obj.id + '/streamed/' + inst_obj.streams[0].name  \
