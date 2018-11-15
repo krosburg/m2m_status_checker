@@ -75,7 +75,7 @@ def writeEngNavNodeLI(fname, node):
         writeHeader(fname)
     
     # Setup Node URL and Window Lit
-    url_base = 'plotDisplay.php?node=' + node + '&window='
+    url_base = 'plotDisplay.php?node=' + node + '&labels=yes&window='
     t_list = ['day', 'week', 'month', 'year']
 
     # Begin List and Write Node Link
