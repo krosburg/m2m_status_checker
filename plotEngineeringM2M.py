@@ -23,8 +23,15 @@ def saveFig(fname, lgd):
         plt.savefig(fname + '.png',
                     bbox_extra_artists=(lgd,), 
                     bbox_inches='tight')
-    Image.open(fig_file+'.png').convert('RGB').save(fig_file + '.jpg', 'JPEG')
-    remove(fig_file + '.png')
+    Image.open(fname + '.png').convert('RGB').save(fname + '.jpg', 'JPEG')
+    remove(fname + '.png')
+
+
+def saveFigNL(fname):
+    """Saves the figure"""
+    plt.savefig(fname + '.png', bbox_inches='tight')
+    Image.open(fname + '.png').convert('RGB').save(fname + '.jpg', 'JPEG')
+    remove(fname + '.png')
 
 
 def makePlotNice():
@@ -151,6 +158,11 @@ for site in rsn.sites:
             # Tidy up the X-Axis
             if not err_flag:
                 tidyXAxis('%H:%M\n%m-%d-%y', value_size)
+
+            # Setup File Names
+            fig_file = img_dir + site.id + '-' + tstr.replace(' ', '_')
+            print(fig_file + '_NL.png updated')
+            saveFigNL(fig_file + '_NL')
 
             # Add Legend
             if err_flag:
