@@ -21,7 +21,7 @@ def writeENGSummary(fname):
         writeHeader(fname)
 
     # Setup Node URL and Window Lit
-    url_base = 'plotDisplay.php?param=Currents&window='
+    url_base = 'plotDisplay.php?param=Currents&labels=no&window='
     t_list = ['day', 'week', 'month', 'year']
 
     # Begin List and Write Node Link
