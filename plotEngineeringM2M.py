@@ -172,8 +172,8 @@ for site in rsn.sites:
 
             # Save Figures
             fig_file = img_dir + site.id + '-' + tstr.replace(' ', '_')
-            print(fig_file + '.png updated')
-            saveFig(fig_file, lgd)
+            print(fig_file + '_L.png updated')
+            saveFig(fig_file + '_L', lgd)
         plt.close('all')
         print(' ')
 
