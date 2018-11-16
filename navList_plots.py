@@ -18,6 +18,7 @@ with open(rsn_file, 'rb') as input:
 o.writeNavHeader(web_file, 'M2M Science Data Page')
 
 # Print Summary Page
+o.writePlotSuperSummary(web_file)
 o.writePlotSummary(web_file)
 
 
