@@ -75,7 +75,7 @@ def writePlotSuperSummary(fname):
         writeHeader(fname)
 
     # Setup Node URL and Window Lit
-    url_base = 'test.php?window='
+    url_base = 'superSummary.php?window='
     t_list = ['day', 'week', 'month', 'year']
 
     # Begin List and Write Node Link
