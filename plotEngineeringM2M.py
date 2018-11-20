@@ -245,13 +245,23 @@ for site in rsn.sites:
                 fig = plt.figure(ii, figsize=(18, 4.475))
                 tstr = node.id + ' ' + tstrs[ii-1]
                 makePlotNice()
+                if not err_flag:
+                    tidyXAxis('%H:%M\n%m-%d-%y', value_size)
+                # Generate no-legend figure
+                fig_file = img_dir + site.id + '-' + tstr.replace(' ', '_')
+                print(fig_file + '_NL.png updated')
+                saveFigNL(fig_file + '_NL')
+                # Add legend (or not)
                 if err_flag:
                     lgd = []
                 else:
-                    tidyXAxis('%H:%M\n%m-%d-%y', value_size)
                     lgd = addLegend()
+                # Generate w/ legend figure
                 fig_file = img_dir + site.id + '-' + tstr.replace(' ', '_')
-                print(fig_file + '.png updated')
-                saveFig(fig_file, lgd)
+                print(fig_file + '_L.png updated')
+                saveFig(fig_file + '_L', lgd)
+#                fig_file = img_dir + site.id + '-' + tstr.replace(' ', '_')
+#                print(fig_file + '.png updated')
+#                saveFig(fig_file, lgd)
             plt.close('all')
         print(' ')
