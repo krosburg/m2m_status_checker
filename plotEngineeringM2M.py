@@ -222,21 +222,26 @@ for site in rsn.sites:
 
             # Plot Temperature
             fig = plt.figure(1, figsize=(18, 4.475))
-            plt.plot(inst.time, inst.data[0], label='Dock Temp')
-            plt.plot(inst.time, inst.data[1], label='Heat Sink Temp')
+            lb1 = "Dock Temp (avg: %2.2f, max: %2.2f, min: %2.2f)" % (inst.avgs[0], inst.maxs[0], inst.mins[0])
+            lb2 = "Heat Sink Temp (avg: %2.2f, max: %2.2f, min: %2.2f)" % (inst.avgs[1], inst.maxs[1], inst.mins[1])
+            lb3 = "12 Volt Current (avg: %2.2f, max: %2.2f, min: %2.2f)" % (inst.avgs[2], inst.maxs[2], inst.mins[2])
+            lb4 = "Relative Humidity (avg: %2.2f, max: %2.2f, min: %2.2f)" % (inst.avgs[3], inst.maxs[3], inst.mins[3])
+            plt.plot(inst.time, inst.data[0], label=lb1)
+            #plt.plot(inst.time, inst.data[1], label='Heat Sink Temp')
+            plt.plot(inst.time, inst.data[1], label=lb2)
             if err_flag:
                 t_start, t_end = errorPlot()
                 
 
             # Plot Current
             fig = plt.figure(2, figsize=(18, 4.475))
-            plt.plot(inst.time, inst.data[2], label='12 Volt Current')
+            plt.plot(inst.time, inst.data[2], label=lb3)
             if err_flag:
                 t_start, t_end = errorPlot()
 
             # Plot Current
             fig = plt.figure(3, figsize=(18, 4.475))
-            plt.plot(inst.time, inst.data[3], label='Relative Humidity')
+            plt.plot(inst.time, inst.data[3], label=lb4)
             if err_flag:
                 t_start, t_end = errorPlot()
 

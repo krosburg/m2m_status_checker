@@ -267,9 +267,15 @@ def getPDData(inst_obj, time_window):
 
     # Assign Data
     inst_obj.data = []
+    inst_obj.maxs = []
+    inst_obj.mins = []
+    inst_obj.avgs = []
     inst_obj.time = epoch2dt(data['time'])
     for pname in params:
         x = np.array(data[pname], dtype=np.float)
         x[x <= -9.9e5] = float('NaN')
         inst_obj.data.append(list(x))
+        inst_obj.maxs.append(np.nanmax(x))
+        inst_obj.mins.append(np.nanmin(x))
+        inst_obj.avgs.append(np.nanmean(x))
     return inst_obj, t_start, t_end
