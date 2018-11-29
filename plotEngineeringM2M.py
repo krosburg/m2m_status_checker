@@ -64,12 +64,22 @@ def errorPlot():
              ha='center', va='center', size=40, color='black')
     return plt.xlim()
 
+def offlinePlot():
+     print('Operationally off. Skipping.')
+     plt.plot()
+     plt.text(0, 0, 'OPERATIONALLY OFFLINE',
+              ha='center', va='center', size=60, color='green')
+     plt.text(0, -0.02, 'No need for concern!',
+              ha='center', va='center', size=40, color='black')
+     return plt.xlim()
+
 
 # Define Variables
 t_window = getTimeWinArg()
 img_dir = '/var/www/html/engm2m/images/' + t_window + '/'
 tstrs = ['Port Currents', 'Port Temps', 'Port GFD High', 'Port GFD Low']
 ylabs = ['milliAmps', 'deg', 'microAmps', 'microAmps']
+offline_nodes = ['PC03A', 'SF03A']
 
 # Define Plotting Variables
 label_size = 23
@@ -149,7 +159,10 @@ for site in rsn.sites:
             fig = plt.figure(ii, figsize=(18, 4.475))
 
             if err_flag:
-                t_start, t_end = errorPlot()
+                if node.id in offline_nodes:
+                    t_start, t_end = offlinePlot()
+                else:
+                    t_start, t_end = errorPlot()
 
             # Add Y-Label, Title, and Grid
             tstr = node.id + ' ' + tstrs[ii-1]
