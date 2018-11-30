@@ -113,8 +113,9 @@ ip2inst_table = {'LJ01A-J05-IP1' : 'HPIESA101',
 
 # Define the lookup function
 def IP2inst(node, ipnum):
-    key = node + '-' + ipnum
-    return ip2inst_table[key]
-
-
-print(IP2inst('PC01A','J02-EP1'))
+    key = node + '-J' + ipnum
+    try:
+        return ip2inst_table[key]
+    except:
+        None;
+    return ' '

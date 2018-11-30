@@ -8,6 +8,7 @@ from matplotlib import dates as mdates
 from matplotlib import pyplot as plt
 from datetime import datetime
 from ooi_func import getIPData, getTimeWinArg, getPDData
+from ooi_IP2inst import IP2inst
 try:
     import cPickle as pickle
 except ModuleNotFoundError:
@@ -109,8 +110,6 @@ for site in rsn.sites:
     
     # Loop on Nodes for Site
     for node in nodes:
-        if not node.id == "LV01C":
-            continue
         print(datetime.now())
         # Skip if No Instruments
         if not node.instruments:
@@ -150,9 +149,10 @@ for site in rsn.sites:
             figNum = 1
             for data in inst.ipData:
                 # Assemble Plot Label
-                plt_lab = 'J%s avg: %2.2f, max: %2.2f' % (inst.id,
-                                                          np.nanmean(data),
-                                                          np.nanmax(data))
+                plt_lab = 'J%s %s avg: %2.2f, max: %2.2f' % (inst.id,
+                                                             IP2inst(node.id, inst.id),
+                                                             np.nanmean(data),
+                                                             np.nanmax(data))
                 # Instantiate Figure and Plot Data; Incrament Counter
                 fig = plt.figure(figNum, figsize=(18, 4.475))
                 plt.plot(inst.time, data, label=plt_lab)
