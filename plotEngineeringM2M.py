@@ -106,9 +106,11 @@ for site in rsn.sites:
 
     # Filter only for PD nodes
     nodes = [n for n in site.nodes if 'PD' not in n.id]
-
+    
     # Loop on Nodes for Site
     for node in nodes:
+        if not node.id == "LV01C":
+            continue
         print(datetime.now())
         # Skip if No Instruments
         if not node.instruments:
@@ -119,7 +121,10 @@ for site in rsn.sites:
             if node.id == "PC01B" or node.id == "SF01B":
                 continue
         elif site.id == "RS01SUM1":
-            continue
+            if node.id == "LV01B" or node.id == "LJ01B":
+                None
+            else:
+                continue
 
         # Filter Instruments to IP Only
         node.filtIPOnly()

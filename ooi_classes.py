@@ -64,7 +64,10 @@ class Node:
 
     def filtIPOnly(self):
         for inst in self.instruments:
-            if 'IP' not in inst.id:
+            #if 'IP' not in inst.id or 'EP' not in inst.id:
+            if 'IP' in inst.id or 'EP' in inst.id:
+                None
+            else:
                 self.dropInst(inst)
 
 
