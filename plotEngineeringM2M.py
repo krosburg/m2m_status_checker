@@ -318,12 +318,13 @@ if t_window == 'day':
         remove(fail_file)
         
     # Write a flag file
-    f = open(fail_file, "w")
-    f.write("M2M Engineering Data May Be Experiencing Problems:\n")
-    f.write("  %i of %i (%2.1f%%) data requests failed during generation of M2M engineering plots %s.\n" % (fail_cnt,
+    if how_bad >= 75.0:
+        f = open(fail_file, "w")
+        f.write("M2M Engineering Data May Be Experiencing Problems:\n")
+        f.write("  %i of %i (%2.1f%%) data requests failed during generation of M2M engineering plots %s.\n" % (fail_cnt,
                                                                                                             tot_cnt,
                                                                                                             how_bad,
                                                                                                             t_now))
-    f.close()
+        f.close()
     
 
