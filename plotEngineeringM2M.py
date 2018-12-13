@@ -301,7 +301,7 @@ for site in rsn.sites:
 
 # Now Create a Flag File if Things Went Terribly Wrong :(
 how_bad = 100.0*float(fail_cnt)/float(tot_cnt)
-t_now = datetime.utcnow().strftime("on %m/%d/%y at $H:$M UTC")
+t_now = datetime.utcnow().strftime("on %m/%d/%y at %H:%M UTC")
 print(" ")
 print("== SUMMARY =================================")
 print("Total Requests:  %i" % tot_cnt)
