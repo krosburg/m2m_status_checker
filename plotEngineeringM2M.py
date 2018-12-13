@@ -3,7 +3,7 @@ import matplotlib
 matplotlib.use('Agg')
 import numpy as np
 from PIL import Image
-from os import remove
+from os import remove, path
 from matplotlib import dates as mdates
 from matplotlib import pyplot as plt
 from datetime import datetime
@@ -81,6 +81,7 @@ img_dir = '/var/www/html/engm2m/images/' + t_window + '/'
 tstrs = ['Port Currents', 'Port Temps', 'Port GFD High', 'Port GFD Low']
 ylabs = ['milliAmps', 'deg', 'microAmps', 'microAmps']
 offline_nodes = ['PC03A', 'SF03A']
+fail_file = "eng_fail.flag"
 
 # Define Plotting Variables
 label_size = 23
@@ -92,6 +93,10 @@ title_wt = "bold"
 
 # Define RSN Streams Object File
 in_file = 'rsn_eng_streams.pkl'
+
+# Initialize Counters
+tot_cnt = 0
+fail_cnt = 0
 
 
 # Load RSN Data Structure
@@ -136,11 +141,15 @@ for site in rsn.sites:
             if not inst.streams:
                 continue
 
+            # Incrament Total Counter
+            tot_cnt += 1
+
             # Get IP Data
             inst, t_start, t_end = getIPData(inst, t_window)
 
             if not inst:
                 print(' Data return empty: Skipping...')
+                fail_cnt += 1
                 continue
             else:
                 err_flag = False
@@ -288,3 +297,28 @@ for site in rsn.sites:
 #                saveFig(fig_file, lgd)
             plt.close('all')
         print(' ')
+
+
+# Now Create a Flag File if Things Went Terribly Wrong :(
+how_bad = 100.0*float(fail_cnt)/float(tot_cnt)
+t_now = datetime.utcnow().strftime("on %m/%d/%y at $H:$M UTC")
+print(" ")
+print("== SUMMARY =================================")
+print("Total Requests:  %i" % tot_cnt)
+print("Failed Requests: %i" % fail_cnt)
+print(" ")
+print("Run Finished at: " + t_now)
+print("== F I N I S H E D =========================")
+
+
+if t_window == 'day':
+    # Remove existing flag file
+    if path.exists(fail_file):
+        remove(fail_file)
+        
+    # Write a flag file
+    f = open(fail_file, "w")
+    f.write("Aloha,\nHouston, we have a problem:\n  %2.2f%% of %i data requests failed during generation of M2M engineering plots %s.\n" % (how_bad, tot_cnt, t_now))
+    f.close()
+    
+
