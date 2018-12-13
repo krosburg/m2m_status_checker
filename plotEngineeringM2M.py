@@ -306,6 +306,7 @@ print(" ")
 print("== SUMMARY =================================")
 print("Total Requests:  %i" % tot_cnt)
 print("Failed Requests: %i" % fail_cnt)
+print("Percent Failed:  %2.2f%%" % how_bad)
 print(" ")
 print("Run Finished at: " + t_now)
 print("== F I N I S H E D =========================")
@@ -318,7 +319,11 @@ if t_window == 'day':
         
     # Write a flag file
     f = open(fail_file, "w")
-    f.write("Aloha,\nHouston, we have a problem:\n  %2.2f%% of %i data requests failed during generation of M2M engineering plots %s.\n" % (how_bad, tot_cnt, t_now))
+    f.write("M2M Engineering Data May Be Experiencing Problems:\n")
+    f.write("  %i of %i (%2.1f%%) data requests failed during generation of M2M engineering plots %s.\n" % (fail_cnt,
+                                                                                                            tot_cnt,
+                                                                                                            how_bad,
+                                                                                                            t_now))
     f.close()
     
 
