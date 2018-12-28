@@ -115,7 +115,7 @@ for site in rsn.sites:
     
     # Loop on Nodes for Site
     for node in nodes:
-        print(datetime.now())
+        print(str(datetime.now()) + ' - ' + node.id)
         # Skip if No Instruments
         if not node.instruments:
             continue

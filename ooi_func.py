@@ -221,6 +221,7 @@ def getIPData(inst_obj, time_window):
     # Send Request
     raw_data = getData(url, 1)
     if not raw_data:
+        print(url)
         return [], t_start, t_end
     data = pd.DataFrame.from_records(raw_data)
 
