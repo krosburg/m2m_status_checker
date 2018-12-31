@@ -217,7 +217,6 @@ def getIPData(inst_obj, time_window):
             + '?beginDT=' + t_start + '&endDT=' + t_end + '&limit='  \
             + LIMIT + '&parameters=PD7100,PD7102,PD7103,PD7104,PD7'  \
             + '&require_deployment=False'
-    # NOTE: Changed above limit->Limit, parameters->Parameters per Redmine ticket
 
     # Send Request
     raw_data = getData(url, 1)
