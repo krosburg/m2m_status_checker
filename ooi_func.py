@@ -1,4 +1,4 @@
-import requests, sys
+import requests, sys, json
 import pandas as pd
 import numpy as np
 import datetime as dt
@@ -214,16 +214,19 @@ def getIPData(inst_obj, time_window):
     # Assemble URL
     url = U + inst_obj.parentSite + '/' + inst_obj.parentNode + '/'  \
             + inst_obj.id + '/streamed/' + inst_obj.streams[0].name  \
-            + '?beginDT=' + t_start + '&endDT=' + t_end + '&Limit='  \
-            + LIMIT + '&Parameters=PD7100,PD7102,PD7103,PD7104,PD7'  \
+            + '?beginDT=' + t_start + '&endDT=' + t_end + '&limit='  \
+            + LIMIT + '&parameters=PD7100,PD7102,PD7103,PD7104,PD7'  \
             + '&require_deployment=False'
     # NOTE: Changed above limit->Limit, parameters->Parameters per Redmine ticket
+
     # Send Request
     raw_data = getData(url, 1)
     if not raw_data:
         print(url)
         return [], t_start, t_end
     data = pd.DataFrame.from_records(raw_data)
+
+    print(json.dumps(raw_data, sort_keys=True, indent=4).replace('\\n', '\n'))
 
     # Assign Data
     inst_obj.ipData = []
