@@ -226,8 +226,6 @@ def getIPData(inst_obj, time_window):
         return [], t_start, t_end
     data = pd.DataFrame.from_records(raw_data)
 
-    print(json.dumps(raw_data, sort_keys=True, indent=4).replace('\\n', '\n'))
-
     # Assign Data
     inst_obj.ipData = []
     inst_obj.time = epoch2dt(data['time'])
