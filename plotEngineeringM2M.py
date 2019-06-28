@@ -80,7 +80,7 @@ t_window = getTimeWinArg()
 img_dir = '/var/www/html/engm2m/images/' + t_window + '/'
 tstrs = ['Port Currents', 'Port Temps', 'Port GFD High', 'Port GFD Low']
 ylabs = ['milliAmps', 'deg', 'microAmps', 'microAmps']
-offline_nodes = ['PC03A', 'SF03A']
+offline_nodes = []
 fail_file = "eng_fail.flag"
 
 # Define Plotting Variables
